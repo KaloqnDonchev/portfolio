@@ -31,12 +31,16 @@ export default function Contact() {
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    const result = await sendMessage(data);
+    try {
+      const result = await sendMessage(data);
 
-    if (result.success) {
-      setStatus("success");
-      form.reset();
-    } else {
+      if (result.success) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
       setStatus("error");
     }
   }
