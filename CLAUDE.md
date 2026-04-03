@@ -14,7 +14,7 @@ There is no linter or test suite configured.
 
 ## Git Workflow
 
-After completing any change to the codebase, always ask the user if they would like to create a new commit and push it to the GitHub repository.
+After completing any change to the codebase, always ask the user if they would like to create a new commit and push it to the GitHub repository. Before committing, write a clean and concise commit message that accurately describes the change.
 
 ## Architecture
 
