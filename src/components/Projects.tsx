@@ -42,7 +42,7 @@ export default function Projects() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
               whileHover={{ y: -4 }}
-              className="group relative border border-[#1f1f1f] bg-[#111111] p-6 transition-colors duration-300 hover:border-[#22d3ee]/40"
+              className="group relative cursor-pointer border border-[#1f1f1f] bg-[#111111] p-6 transition-colors duration-300 hover:border-[#22d3ee]/40"
             >
               {/* Inner glow on hover */}
               <div
@@ -71,7 +71,18 @@ export default function Projects() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-5">
+              {/* Stretched link — makes the whole card clickable */}
+              {project.live && (
+                <a
+                  href={project.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${project.name}`}
+                  className="absolute inset-0"
+                />
+              )}
+
+              <div className="relative z-10 flex items-center gap-5">
                 {project.github && (
                   <a
                     href={project.github}

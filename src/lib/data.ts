@@ -87,7 +87,7 @@ export const projects = [
       "AI-powered grocery list app with smart item suggestions, built with a modern full-stack using server-side logic and a persistent database.",
     tech: ["Next.js", "Supabase", "Prisma"],
     github: "https://github.com/KaloqnDonchev/grocery-list/",
-    live: null as string | null,
+    live: "https://grocery-list-kaloyan.vercel.app/",
   },
 ];
 
