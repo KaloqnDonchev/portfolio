@@ -104,7 +104,7 @@ export default function Hero() {
         >
           <a
             href="#projects"
-            className="inline-flex items-center gap-2 border border-[#22d3ee] px-6 py-3 font-mono text-sm text-[#22d3ee] transition-all hover:bg-[#22d3ee]/10"
+            className="inline-flex items-center gap-2 border border-[#1f1f1f] px-6 py-3 font-mono text-sm text-[#64748b] transition-all hover:border-[#22d3ee] hover:text-[#22d3ee]"
           >
             [ View Projects ]
           </a>
