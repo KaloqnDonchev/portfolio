@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { contact } from "@/lib/data";
-import { Mail } from "lucide-react";
+import { Mail, Send, CheckCircle, AlertCircle } from "lucide-react";
+import { sendMessage } from "@/app/actions/contact";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -17,7 +19,28 @@ const fadeUp = {
   show: { opacity: 1, y: 0 },
 };
 
+type FormStatus = "idle" | "sending" | "success" | "error";
+
 export default function Contact() {
+  const [status, setStatus] = useState<FormStatus>("idle");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("sending");
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const result = await sendMessage(data);
+
+    if (result.success) {
+      setStatus("success");
+      form.reset();
+    } else {
+      setStatus("error");
+    }
+  }
+
   return (
     <section id="contact" className="px-6 py-24">
       <div className="mx-auto max-w-5xl">
@@ -32,39 +55,137 @@ export default function Contact() {
           <span className="text-[#22d3ee]">&gt; </span>Contact
         </motion.h2>
 
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="max-w-xl"
-        >
-          <p className="mb-10 text-lg leading-relaxed text-[#64748b]">
-            I&apos;m currently open to new opportunities. Whether you have a
-            question, a project in mind, or just want to say hi — my inbox is
-            always open.
-          </p>
+        <div className="grid gap-12 md:grid-cols-2">
+          {/* Form */}
+          <motion.form
+            onSubmit={handleSubmit}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-5"
+          >
+            <div>
+              <label
+                htmlFor="name"
+                className="mb-1.5 block font-mono text-sm text-[#64748b]"
+              >
+                Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                className="w-full border border-[#1f1f1f] bg-[#111111] px-4 py-3 text-sm text-[#f1f5f9] outline-none transition-colors placeholder:text-[#334155] focus:border-[#22d3ee]"
+                placeholder="Your name"
+              />
+            </div>
 
-          <div className="flex flex-wrap gap-4">
-            <a
-              href={`mailto:${contact.email}`}
-              className="inline-flex items-center gap-2 border border-[#22d3ee] px-6 py-3 font-mono text-sm text-[#22d3ee] transition-all hover:bg-[#22d3ee]/10"
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-1.5 block font-mono text-sm text-[#64748b]"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                className="w-full border border-[#1f1f1f] bg-[#111111] px-4 py-3 text-sm text-[#f1f5f9] outline-none transition-colors placeholder:text-[#334155] focus:border-[#22d3ee]"
+                placeholder="your@email.com"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="message"
+                className="mb-1.5 block font-mono text-sm text-[#64748b]"
+              >
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                required
+                rows={5}
+                className="w-full resize-none border border-[#1f1f1f] bg-[#111111] px-4 py-3 text-sm text-[#f1f5f9] outline-none transition-colors placeholder:text-[#334155] focus:border-[#22d3ee]"
+                placeholder="Your message..."
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="inline-flex items-center gap-2 border border-[#22d3ee] px-6 py-3 font-mono text-sm text-[#22d3ee] transition-all hover:bg-[#22d3ee]/10 disabled:opacity-50"
             >
-              <Mail className="h-4 w-4" />
-              Say Hello
-            </a>
-            <a
-              href={contact.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 border border-[#1f1f1f] px-6 py-3 font-mono text-sm text-[#64748b] transition-all hover:border-[#22d3ee] hover:text-[#22d3ee]"
-            >
-              <GithubIcon className="h-4 w-4" />
-              GitHub
-            </a>
-          </div>
-        </motion.div>
+              {status === "sending" ? (
+                "Sending..."
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  Send Message
+                </>
+              )}
+            </button>
+
+            {status === "success" && (
+              <p className="flex items-center gap-2 text-sm text-emerald-400">
+                <CheckCircle className="h-4 w-4" />
+                Message sent! I&apos;ll get back to you soon.
+              </p>
+            )}
+            {status === "error" && (
+              <p className="flex items-center gap-2 text-sm text-red-400">
+                <AlertCircle className="h-4 w-4" />
+                Something went wrong. Try emailing me directly.
+              </p>
+            )}
+          </motion.form>
+
+          {/* Direct links */}
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <p className="mb-8 text-lg leading-relaxed text-[#64748b]">
+              I&apos;m currently open to new opportunities. Whether you have a
+              project in mind or just want to say hi — feel free to reach out.
+            </p>
+
+            <div className="space-y-4">
+              <a
+                href={`mailto:${contact.email}`}
+                className="flex items-center gap-3 border border-[#1f1f1f] px-5 py-4 text-sm text-[#64748b] transition-all hover:border-[#22d3ee] hover:text-[#22d3ee]"
+              >
+                <Mail className="h-5 w-5" />
+                <div>
+                  <div className="font-mono text-xs text-[#64748b]">Email</div>
+                  <div className="text-[#f1f5f9]">{contact.email}</div>
+                </div>
+              </a>
+
+              <a
+                href={contact.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 border border-[#1f1f1f] px-5 py-4 text-sm text-[#64748b] transition-all hover:border-[#22d3ee] hover:text-[#22d3ee]"
+              >
+                <GithubIcon className="h-5 w-5" />
+                <div>
+                  <div className="font-mono text-xs text-[#64748b]">GitHub</div>
+                  <div className="text-[#f1f5f9]">KaloqnDonchev</div>
+                </div>
+              </a>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
